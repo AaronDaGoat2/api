@@ -2,18 +2,32 @@
 Anexo de imagenes de Vercel y zod:
 vercel-import-repo>
 <img width="1908" height="911" alt="vercel-import-repo" src="https://github.com/user-attachments/assets/a5eb08ab-459e-4aa3-b6a8-35cddfa6cea6" />
+
+
 vercel-github-permisos:
 <img width="689" height="651" alt="vercel-github-permisos" src="https://github.com/user-attachments/assets/9decb644-05ac-4eb7-9fe3-7f130b32c76f" />
+
+
 vercel-deploy-exitoso:
 <img width="1600" height="830" alt="vercel-deploy-exitoso" src="https://github.com/user-attachments/assets/bdb90ad9-ed46-4941-9438-1afd62ba68d9" />
+
+
 vercel-confirmar-importacion:
 <img width="1908" height="858" alt="vercel-confirmar-importacion" src="https://github.com/user-attachments/assets/f1d3bd74-cfb1-4ccc-bd94-12914c809288" />
+
+
 vercel-config-env:
 <img width="1919" height="983" alt="vercel-config-env" src="https://github.com/user-attachments/assets/0e7afe44-ce2f-4a7f-8b06-482abb731ddc" />
+
+
 vercel-build-error:
 <img width="1654" height="478" alt="vercel-build-error" src="https://github.com/user-attachments/assets/fdc1f9f6-e973-4a6c-8e9e-462f49cfa50b" />
+
+
 captura-zod-password:
 <img width="1600" height="899" alt="captura-zod-password" src="https://github.com/user-attachments/assets/6b7e26c2-da6e-4248-8e8e-d26e3cb6b599" />
+
+
 captura-zod-email:
 <img width="1600" height="899" alt="captura-zod-email" src="https://github.com/user-attachments/assets/8455760f-6945-4814-b01e-3cc88754a1b4" />
 
