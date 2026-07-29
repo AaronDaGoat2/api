@@ -35,3 +35,9 @@ api/
 ├── .gitignore             # Bloquea node_modules, .env, .DS_Store, dist/
 ├── vercel.json            # Script/Configuración de inicio Serverless
 └── README.md
+
+evidencias>
+
+![image alt](<img width="719" height="80" alt="image" src="https://github.com/user-attachments/assets/0de45c29-0c80-4906-95e8-d4ee392b3964" />
+)
+![image alt](https://github.com/AaronDaGoat2/api/blob/10d1c0e000cc997c7a8c9f65d7d2f05fc8e87b30/vercel-build-error.png)
