@@ -44,65 +44,24 @@ Endpoints de la API
 3. POST /refresh | Renueva sesión silenciosamente.
 
 4. POST /logout | Destruye la sesión.
-🧪 Reporte de Pruebas y Validación (Zod)
+## 🧪 Reporte de Pruebas y Validación (Zod)
 
 Se implementó un middleware para evaluar esquemas de datos. A continuación, el reporte de consumo e integración interceptando peticiones inválidas:
 
-Prueba 1: Contraseña por debajo del mínimo requerido
-
-Validación intercepta la petición por longitud:
-
-Prueba 2: Error tipográfico (Typo) en campo Email
-
-Validación detecta formato inválido:
-☁️ Guía Paso a Paso de Despliegue en la Nube (Vercel)
-
-El proceso de despliegue de esta API se realizó en la plataforma PaaS Vercel siguiendo este flujo:
-
-    Sincronización del Repositorio: Se vinculó este repositorio de GitHub con el panel de Vercel para habilitar la Integración y Despliegue Continuo (CI/CD).
-
-    Configuración de Variables de Entorno: Desde el panel de Settings > Environment Variables de Vercel, se inyectaron manualmente los valores del archivo .env (credenciales de Firebase y Resend) para mantener la seguridad.
-
-    Configuración de Scripts de Inicio (vercel.json): Al ser una arquitectura Serverless, en lugar de un script clásico como npm start, el inicio y compilación se controlan mediante el archivo vercel.json.
-
-    Resolución de Logs y Errores: Durante el build inicial, se presentó un error de lectura ('readFile') de TypeScript.
-
-    Log del error:
-
-    Solución: Se ajustó el script de compilación en vercel.json apuntando explícitamente a @vercel/node@latest.
-
-    Despliegue Exitoso: Tras el parche, Vercel compiló los módulos de Node y expuso la API correctamente.
-
-    Evidencia del estado Ready:
-
-    ---
+| Caso | Descripción | Evidencia |
+| :--- | :--- | :--- |
+| **1** | **Contraseña por debajo del mínimo**<br>La validación intercepta la petición por longitud y retorna `400 Bad Request`. | ![Error Password](./evidence/captura-zod-password.png) |
+| **2** | **Error tipográfico en campo Email**<br>La validación detecta formato inválido y retorna `400 Bad Request`. | ![Error Email](./evidence/captura-zod-email.png) |
 
 ---
 
-## 📸 Anexo: Proceso de Integración y Configuración en Vercel
+## ☁️ Guía Paso a Paso de Despliegue en la Nube (Vercel)
 
-Como parte integral de la documentación del flujo de trabajo, a continuación se detallan los pasos iniciales de configuración realizados en el dashboard de la plataforma PaaS (Vercel) de manera previa al primer despliegue exitoso:
+El proceso de despliegue de esta API se realizó en la plataforma PaaS **Vercel** siguiendo este flujo:
 
-### 1. Conexión de Plataformas
-Se inició el proceso seleccionando la opción de importar un repositorio desde un proveedor Git externo directamente en el dashboard de Vercel.
-
-*Evidencia de inicio de importación:*
-![Inicio de Importación](./evidence/vercel-import-repo.png)
-
-### 2. Permisos y Selección en GitHub
-Se autorizó a la aplicación de Vercel dentro de la cuenta institucional de GitHub (`AaronDaGoat2`), otorgando acceso de lectura estrictamente al repositorio destino (`AaronDaGoat2/api`) siguiendo el principio de menor privilegio.
-
-*Evidencia de configuración de permisos en GitHub:*
-![Permisos GitHub](./evidence/vercel-github-permisos.png)
-
-### 3. Importación del Repositorio
-Tras sincronizar los permisos, Vercel detectó el repositorio habilitando su importación directa para establecer el pipeline de Integración y Despliegue Continuo (CI/CD).
-
-*Evidencia del repositorio listo para importar:*
-![Importar Repositorio](./evidence/vercel-confirmar-importacion.png)
-
-### 4. Configuración de Variables de Entorno (Seguridad)
-Para garantizar la seguridad de las credenciales, se inyectaron manualmente los valores del archivo `.env` en la sección de *Environment Variables* de Vercel justo antes de iniciar el despliegue de producción, protegiendo así los secretos del código fuente.
-
-*Evidencia de carga de variables y arranque del despliegue:*
-![Variables de Entorno](./evidence/vercel-config-env.png)
+| Paso | Acción | Evidencia / Resultado |
+| :--- | :--- | :--- |
+| **1** | **Sincronización del Repositorio**<br>Se vinculó el repositorio de GitHub con el panel de Vercel para habilitar CI/CD. | ![Importación](./evidence/vercel-confirmar-importacion.png) |
+| **2** | **Variables de Entorno (Seguridad)**<br>Se inyectaron los secretos de Firebase y Resend para no exponer claves en el código. | ![Variables](./evidence/vercel-config-env.png) |
+| **3** | **Resolución de Build Error**<br>Fallo de TS (`readFile`). Se ajustó `vercel.json` apuntando a `@vercel/node@latest`. | ![Build Error](./evidence/vercel-build-error.png) |
+| **4** | **Despliegue Exitoso**<br>Vercel compiló los módulos de Node y expuso la API correctamente a producción. | ![Exitoso](./evidence/vercel-deploy-exitoso.png) |
