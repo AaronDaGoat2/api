@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import { AuthController } from './auth.controller';
 import { requireAuth } from '../../middlewares/auth.middleware';
+import { validateSchema } from '../../middlewares/validate.middleware';
+import { loginSchema } from './auth.schema';
 
 const router = Router();
 
-// Rutas públicas
-router.post('/login', AuthController.login);
+// Rutas públicas (con validación Zod incorporada en el login)
+router.post('/login', validateSchema(loginSchema), AuthController.login);
 router.post('/refresh', AuthController.refresh);
 router.post('/logout', AuthController.logout);
 

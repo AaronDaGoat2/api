@@ -34,5 +34,6 @@ export function requireAuth(req: Request, res: Response, next: NextFunction): vo
       message: 'Token inválido o expirado.',
       error: error.message,
     });
+    return; 
   }
 }
