@@ -1,112 +1,108 @@
-# 🚀 Ruba Studio API
+# 🔒 RubaStudio Auth & Mail API
 
-API RESTful robusta desarrollada con TypeScript, Node.js y Express para la gestión integral del sistema, orientada a servicios en la nube, autenticación segura y consumo de APIs de terceros (Mashup).
+API Serverless propia desarrollada en TypeScript para la gestión de autenticación, control de sesiones (JWT) e integración híbrida (Mashup) con servicios externos (Resend y Firebase Firestore) para RubaStudio.
 
----
+👨‍💻 **Desarrollado por:** Aaron Gallardo Malpica  
+🌐 **URL Base de Producción:** `https://vercel.com/ruba-studio-api/api/deployments`
 
-## 📋 Tabla de Contenidos
-1. [Acerca del Proyecto](#-acerca-del-proyecto)
-2. [Tecnologías Utilizadas](#-tecnologías-utilizadas)
-3. [Estructura del Proyecto](#-estructura-del-proyecto)
-4. [Requisitos Previos](#-requisitos-previos)
-5. [Variables de Entorno](#-variables-de-entorno)
-6. [Instalación y Configuración Local](#-instalación-y-configuración-local)
-7. [Endpoints Principales](#-endpoints-principales)
-8. [Despliegue](#-despliegue)
+## 📌 Tabla de Contenidos
+- [Características (Arquitectura Mashup)](#-características-arquitectura-mashup)
+- [Estructura y Seguridad de Entorno](#-estructura-y-seguridad-de-entorno)
+- [Endpoints de la API](#-endpoints-de-la-api)
+- [Reporte de Pruebas (Zod)](#-reporte-de-pruebas-y-validación-zod)
+- [Guía de Despliegue en la Nube](#-guía-paso-a-paso-de-despliegue-en-la-nube-vercel)
 
----
+## 🚀 Características (Arquitectura Mashup)
+- ⚡ **Arquitectura Serverless:** alojada y optimizada para la infraestructura de Vercel (PaaS).
+- 🔗 **Integración Híbrida (Mashup):** consumo concurrente de la API propia junto con servicios de terceros (API de **Resend** para notificaciones por correo y **Firebase Firestore** para persistencia de datos).
+- 🔄 **Gestión de sesiones:** login, verificación de perfil (`/me`), renovación silenciosa (`/refresh`) y cierre de sesión seguro (`/logout`).
+- ✅ **Validación de esquemas:** rechazo *fail-fast* de datos malformados con Zod.
 
-## 🎯 Acerca del Proyecto
-**Ruba Studio API** funciona como el núcleo del sistema, diseñado para procesar solicitudes de manera eficiente, validar identidades mediante **JWT (JSON Web Tokens)**, realizar persistencia de datos en tiempo real con **Firebase Firestore** y automatizar procesos de comunicación externa (Mashup) mediante el envío de correos electrónicos transaccionales con **Resend**.
+## 📂 Estructura y Seguridad de Entorno
 
----
+**Estrategia de Seguridad:** La gestión de credenciales se realiza estrictamente mediante variables de entorno local. Se evita la exposición de claves privadas en este repositorio público gracias a la configuración del archivo `.gitignore`.
 
-## 🛠️ Tecnologías Utilizadas
-* **Lenguaje:** TypeScript / JavaScript (Node.js)
-* **Framework:** Express.js
-* **Base de Datos NoSQL:** Firebase Firestore
-* **Autenticación y Seguridad:** JWT (JSON Web Tokens), bcrypt
-* **Servicios Externos (Mashup):** Resend API (Notificaciones y correos)
-* **Control de Versiones:** Git y GitHub
-* **Despliegue (Hosting):** Vercel (Serverless Functions)
-
----
-
-## 📂 Estructura del Proyecto
 ```text
 api/
 ├── src/
-│   ├── config/
-│   │   └── firebase.ts        # Inicialización y credenciales de Firebase Firestore
-│   ├── middlewares/
-│   │   └── auth.middleware.ts # Interceptor para la validación de tokens JWT
+│   ├── config/            
+│   ├── middlewares/       
 │   ├── modules/
-│   │   ├── auth/              # Módulo de Autenticación (Controller, Routes, Schemas, Services)
-│   │   └── mail/              # Módulo de Correo y Mashup (Integración con Resend)
-│   ├── utils/
-│   │   └── jwt.ts             # Utilidades para generación y decodificación de tokens
-│   ├── index.ts               # Punto de entrada de la aplicación Express
-│   └── server.ts              # Configuración de arranque del servidor
-├── .env                       # Variables de entorno privadas (Oculto en producción)
-├── .gitignore                 # Exclusión de archivos sensibles y node_modules
-├── package.json               # Dependencias, scripts y metadatos del proyecto
-├── tsconfig.json              # Configuración y reglas del compilador de TypeScript
-└── vercel.json                # Configuración de enrutamiento y adaptadores para Vercel
+│   └── server.ts          
+├── evidence/              # 📸 Carpeta de evidencias y capturas de pruebas
+├── .env                   # ⚠️ Excluido del repo. Contiene credenciales BD y Resend.
+├── private.key            # ⚠️ Excluido del repo. Llave RSA para firmar JWT.
+├── .gitignore             # Bloquea node_modules, .env, .DS_Store, dist/
+├── vercel.json            # Script/Configuración de inicio Serverless
+└── README.md
+Endpoints de la API
 
-⚙️ Requisitos Previos
+1. POST /login | Inicia sesión y retorna token.
 
-Asegúrate de contar con lo siguiente en tu entorno local antes de iniciar:
+2. GET /me | Retorna perfil del usuario logueado.
 
-    Node.js (Versión 18.x o superior recomendada).
+3. POST /refresh | Renueva sesión silenciosamente.
 
-    Un gestor de paquetes como npm (incluido con Node.js).
+4. POST /logout | Destruye la sesión.
+🧪 Reporte de Pruebas y Validación (Zod)
 
-    Una cuenta activa en Firebase con una base de datos Firestore configurada.
+Se implementó un middleware para evaluar esquemas de datos. A continuación, el reporte de consumo e integración interceptando peticiones inválidas:
 
-🔐 Variables de Entorno (.env)
+Prueba 1: Contraseña por debajo del mínimo requerido
 
-El proyecto requiere un archivo .env en la raíz de la carpeta api con las siguientes variables de configuración:
-Code snippet
+Validación intercepta la petición por longitud:
 
-PORT=3000
-JWT_SECRET=tu_clave_secreta_jwt_muy_segura
-RESEND_API_KEY=tu_api_key_proporcionada_por_resend
-# Credenciales adicionales de Firebase / Configuración del sistema
+Prueba 2: Error tipográfico (Typo) en campo Email
 
-🚀 Instalación y Configuración Local
+Validación detecta formato inválido:
+☁️ Guía Paso a Paso de Despliegue en la Nube (Vercel)
 
-Sigue estos pasos para clonar y echar a andar el proyecto en tu máquina:
+El proceso de despliegue de esta API se realizó en la plataforma PaaS Vercel siguiendo este flujo:
 
-    Clonar el repositorio:
-    Bash
+    Sincronización del Repositorio: Se vinculó este repositorio de GitHub con el panel de Vercel para habilitar la Integración y Despliegue Continuo (CI/CD).
 
-    git clone [https://github.com/AaronDaGoat2/api.git](https://github.com/AaronDaGoat2/api.git)
-    cd api
+    Configuración de Variables de Entorno: Desde el panel de Settings > Environment Variables de Vercel, se inyectaron manualmente los valores del archivo .env (credenciales de Firebase y Resend) para mantener la seguridad.
 
-    Instalar las dependencias del proyecto:
-    Bash
+    Configuración de Scripts de Inicio (vercel.json): Al ser una arquitectura Serverless, en lugar de un script clásico como npm start, el inicio y compilación se controlan mediante el archivo vercel.json.
 
-    npm install
+    Resolución de Logs y Errores: Durante el build inicial, se presentó un error de lectura ('readFile') de TypeScript.
 
-    Configurar las credenciales:
-    Crea tu archivo .env en la raíz basándote en la sección anterior e introduce tus llaves reales.
+    Log del error:
 
-    Ejecutar en entorno de desarrollo:
-    Bash
+    Solución: Se ajustó el script de compilación en vercel.json apuntando explícitamente a @vercel/node@latest.
 
-    npm run dev
+    Despliegue Exitoso: Tras el parche, Vercel compiló los módulos de Node y expuso la API correctamente.
 
-🌐 Endpoints Principales
-🔐 Autenticación (/api/auth)
+    Evidencia del estado Ready:
 
-    POST /api/auth/register — Registra un nuevo usuario en el sistema.
+    ---
 
-    POST /api/auth/login — Autentica al usuario y devuelve un token JWT de acceso.
+---
 
-✉️ Servicios / Mashup (/api/mail)
+## 📸 Anexo: Proceso de Integración y Configuración en Vercel
 
-    POST /api/mail/send — Dispara una notificación por correo electrónico mediante la API externa de Resend ante eventos del sistema (ej. inicio de sesión).
+Como parte integral de la documentación del flujo de trabajo, a continuación se detallan los pasos iniciales de configuración realizados en el dashboard de la plataforma PaaS (Vercel) de manera previa al primer despliegue exitoso:
 
-☁️ Despliegue
+### 1. Conexión de Plataformas
+Se inició el proceso seleccionando la opción de importar un repositorio desde un proveedor Git externo directamente en el dashboard de Vercel.
 
-La aplicación está configurada para integrarse mediante despliegue continuo (CI/CD) en Vercel. Cualquier cambio validado y sincronizado en la rama main de GitHub se compila de manera automática utilizando funciones serverless.
+*Evidencia de inicio de importación:*
+![Inicio de Importación](./evidence/vercel-import-repo.png)
+
+### 2. Permisos y Selección en GitHub
+Se autorizó a la aplicación de Vercel dentro de la cuenta institucional de GitHub (`AaronDaGoat2`), otorgando acceso de lectura estrictamente al repositorio destino (`AaronDaGoat2/api`) siguiendo el principio de menor privilegio.
+
+*Evidencia de configuración de permisos en GitHub:*
+![Permisos GitHub](./evidence/vercel-github-permisos.png)
+
+### 3. Importación del Repositorio
+Tras sincronizar los permisos, Vercel detectó el repositorio habilitando su importación directa para establecer el pipeline de Integración y Despliegue Continuo (CI/CD).
+
+*Evidencia del repositorio listo para importar:*
+![Importar Repositorio](./evidence/vercel-confirmar-importacion.png)
+
+### 4. Configuración de Variables de Entorno (Seguridad)
+Para garantizar la seguridad de las credenciales, se inyectaron manualmente los valores del archivo `.env` en la sección de *Environment Variables* de Vercel justo antes de iniciar el despliegue de producción, protegiendo así los secretos del código fuente.
+
+*Evidencia de carga de variables y arranque del despliegue:*
+![Variables de Entorno](./evidence/vercel-config-env.png)
